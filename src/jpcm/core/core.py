@@ -8,7 +8,7 @@ from matplotlib.colors import Normalize as mplnorm
 import matplotlib.cm as cm
 import logging
 import colour
-colour.utilities.filter_warnings(*[True] * 4)
+#colour.utilities.filter_warnings(*[True] * 4)
 import numpy as np
 import json as js
 from scipy.interpolate import CubicSpline,interp1d
@@ -22,7 +22,7 @@ defaultdatafile = f'{maps.path}cmaps.txt'
 discretization = 40
 
 baseColorSpace = "sRGB"
-colorModel = 'CAM16UCS' # ['CAM16UCS','Jzazbz',...] # 
+colorModel = 'CAM16UCS' # ['CAM16UCS','Jzazbz',...] #
 outputColorModel = 'sRGB'
 
 # spline_type= 'cubic' # ['custom','cubic']
@@ -42,7 +42,7 @@ def linear_segmented_spline(x):
     n_gradients = len(x) - 1
     RGB_list = []
     for i in range(n_gradients):
-        gradient = colour.utilities.lerp(
+        gradient = colour.algebra.lerp(
             x[i][np.newaxis],
             x[i+1][np.newaxis],
             np.linspace(0, 1, discretization)[..., np.newaxis])
@@ -104,7 +104,7 @@ def colormap(gradient, RGB, name):
     fig,_ = colour.plotting.plot_multi_colour_swatches(
         [colour.plotting.ColourSwatch(RGB=np.clip(x, 0, 1)) for x in RGB], height = 2*n_keys)
 
-    ax = fig.add_subplot(212)  
+    ax = fig.add_subplot(212)
 
     cmap = LCM(RGB,name=name)
 
@@ -159,7 +159,7 @@ def gen_cmaps(cmaps,memory_only = True):
     out:    ../maps/maps.txt
             ../maps/<name>.png
     """
-    
+
 
     mapdata = {}
 
@@ -176,13 +176,13 @@ def gen_cmaps(cmaps,memory_only = True):
             # logger.debug("Perceptual:{}".format(x))
             # logger.debug("RGB:{}".format(RGB))
 
-            if not memory_only: 
+            if not memory_only:
                 fig = draw(gradient, RGB, name)
                 fig.savefig(maps.path+key+options+".png",bbox_inches='tight')
                 plt.close()
 
             mapdata[name] = RGB.tolist()
-       
+
 
     return mapdata
 
